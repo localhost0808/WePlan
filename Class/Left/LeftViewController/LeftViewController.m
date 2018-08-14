@@ -17,24 +17,33 @@
 @interface LeftViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) LeftViewControllerHeaderView *leftViewControllerHeaderView;
+
+@property (nonatomic, strong) NSArray *imagesArr;
+@property (nonatomic, strong) NSArray *titlesArr;
 @end
 
 @implementation LeftViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self setData];
     [self.view addSubview:self.leftViewControllerHeaderView];
     [self.view addSubview:self.tableView];
 }
 
+- (void)setData {
+    _imagesArr = @[@"001",@"001",@"001",@"setting"];
+    _titlesArr = @[@"001",@"001",@"001",@"设置"];
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    return _imagesArr.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     LeftViewControllerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LEFTVIEWCONTROLLERTABLEVIEWCELLIFTIFER forIndexPath:indexPath];
-    cell.imageView.image = [UIImage imageNamed:@"001"];
-    cell.textLabel.text = [NSString stringWithFormat:@"%ld测试测试",indexPath.row];
-    cell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:15];
+    cell.imageView.image = [UIImage imageNamed:_imagesArr[indexPath.row]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@", _titlesArr[indexPath.row]];
+    cell.textLabel.font = [UIFont fontWithName:@".SFUIText" size:15];
 //    .SFUIText 默认
 //    -Bold 加粗
 
