@@ -27,6 +27,7 @@
 
 
 - (id)setViewController {
+    
     id classMain = [NSClassFromString(@"ViewController") new];
     id classLeft = [NSClassFromString(@"LeftViewController") new];
     MMDrawerController *drawer = [[MMDrawerController alloc] initWithCenterViewController:classMain leftDrawerViewController:classLeft];
