@@ -46,7 +46,7 @@
         return _usr;
     }
     // 1.初始化数据库连接用户
-    _usr = [[OHMySQLUser alloc] initWithUserName:@"bdm260170647" password:@"Li463344" serverName:@"bdm260170647.my3w.com" dbName:@"bdm260170647_db" port:3306 socket:nil];
+    _usr = [[OHMySQLUser alloc] initWithUserName:@"bdm260170647_db" password:@"******" serverName:@"bdm260170647.my3w.com" dbName:@"bdm260170647_db_db" port:3306 socket:nil];
     return _usr;
 }
 
