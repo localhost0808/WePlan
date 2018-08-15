@@ -23,7 +23,15 @@
 @end
 
 @implementation LeftViewController
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = YES;
+}
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBar.hidden = NO;
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setData];
@@ -34,6 +42,12 @@
 - (void)setData {
     _imagesArr = @[@"001",@"001",@"001",@"setting"];
     _titlesArr = @[@"001",@"001",@"001",@"设置"];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:NO completion:nil];
+    UINavigationController *nav = (UINavigationController *)self.mm_drawerController.centerViewController.childViewControllers[0];
+    [nav pushViewController:[NSClassFromString(@"SpeechViewController") new] animated:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

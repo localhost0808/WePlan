@@ -27,11 +27,10 @@
 
 
 - (id)setViewController {
-    
-    id classMain = [NSClassFromString(@"ViewController") new];
+    id classCenter = [NSClassFromString(@"ViewController") new];
     id classLeft = [NSClassFromString(@"LeftViewController") new];
-    MMDrawerController *drawer = [[MMDrawerController alloc] initWithCenterViewController:classMain leftDrawerViewController:classLeft];
-    drawer.openDrawerGestureModeMask = MMOpenDrawerGestureModeAll;
+    MMDrawerController *drawer = [[MMDrawerController alloc] initWithCenterViewController:classCenter leftDrawerViewController:classLeft];
+    drawer.openDrawerGestureModeMask = MMOpenDrawerGestureModeNone;
     drawer.closeDrawerGestureModeMask =MMCloseDrawerGestureModeAll;
     drawer.maximumLeftDrawerWidth = [UIScreen mainScreen].bounds.size.width - 75.0;
     drawer.view.backgroundColor = [UIColor whiteColor];

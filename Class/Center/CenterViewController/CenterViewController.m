@@ -21,6 +21,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.mm_drawerController.openDrawerGestureModeMask = MMOpenDrawerGestureModeBezelPanningCenterView;
     self.navigationItem.title = @"主页";
     [self setupLeftMenuButton];
     if (@available(iOS 11.0, *)) {
@@ -39,6 +40,10 @@
 -(void)leftDrawerButtonPress:(id)sender {
     //开关左抽屉
     [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.navigationController pushViewController:[NSClassFromString(@"SpeechViewController") new] animated:YES];
 }
 
 #pragma mark -- TableView DataSource
