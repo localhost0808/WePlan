@@ -310,15 +310,15 @@
         
                 _labText= [[UILabel alloc]init];
         
-                _labText.frame = CGRectMake(0, 140, [UIScreen mainScreen].bounds.size.width, 50);
+                _labText.frame = CGRectMake(0, 200, [UIScreen mainScreen].bounds.size.width, 50);
         
-                _labText.font= [UIFont systemFontOfSize:13.0f];
+                _labText.font= [UIFont systemFontOfSize:20.0f];
         
                 _labText.numberOfLines = 0;
         
                 _labText.textAlignment = NSTextAlignmentCenter;
         
-                _labText.textColor = [UIColor yellowColor];
+                _labText.textColor = [UIColor blackColor];
         
             }
     
@@ -336,7 +336,7 @@
         
                 _swicthBut= [[UIButton alloc]init];
         
-                _swicthBut.frame=CGRectMake(50,100,80,30);
+                _swicthBut.frame=CGRectMake(50,150,80,30);
         
                 _swicthBut.titleLabel.textAlignment = NSTextAlignmentCenter;
         

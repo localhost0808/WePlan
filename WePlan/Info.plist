@@ -25,11 +25,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-    
-    <key>NSSpeechRecognitionUsageDescription</key>
-    <string></string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string></string>
 	<key>NSCalendarsUsageDescription</key>
 	<string></string>
 	<key>NSCameraUsageDescription</key>
@@ -40,7 +35,11 @@
 	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
+	<string></string>
+	<key>NSSpeechRecognitionUsageDescription</key>
 	<string></string>
 	<key>Nav_Color</key>
 	<string></string>

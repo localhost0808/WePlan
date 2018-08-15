@@ -100,6 +100,7 @@ typedef enum  NetworkStatus {
                     
                     //事件内容备注
                     event.notes = @"接受信息类容备注";
+//                FIXME:待修改
                     EKCalendar* calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:eventStore];
                     calendar.title = @"WePlan";
                     calendar.CGColor = [UIColor greenColor].CGColor;
