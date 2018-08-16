@@ -28,6 +28,7 @@
 		4AE48CC3211B222B0092EF71 /* WePlanUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE48CC2211B222B0092EF71 /* WePlanUITests.m */; };
 		53ABCBB204D0096FE30D5F25 /* libPods-WePlanTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD002BC6FD061702CB3AF1B4 /* libPods-WePlanTests.a */; };
 		819974CE212413110096EE0A /* SpeechViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 819974CD212413100096EE0A /* SpeechViewController.m */; };
+		819974D2212514790096EE0A /* SpeechManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 819974D1212514790096EE0A /* SpeechManager.m */; };
 		C47542DFC1815063C7A9FE1F /* libPods-WePlan.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E5BC49D7DB33A349E6FF3A1 /* libPods-WePlan.a */; };
 /* End PBXBuildFile section */
 
@@ -96,6 +97,8 @@
 		6E5BC49D7DB33A349E6FF3A1 /* libPods-WePlan.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WePlan.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		819974CC212413100096EE0A /* SpeechViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpeechViewController.h; sourceTree = "<group>"; };
 		819974CD212413100096EE0A /* SpeechViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpeechViewController.m; sourceTree = "<group>"; };
+		819974D0212514790096EE0A /* SpeechManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SpeechManager.h; sourceTree = "<group>"; };
+		819974D1212514790096EE0A /* SpeechManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpeechManager.m; sourceTree = "<group>"; };
 		AD002BC6FD061702CB3AF1B4 /* libPods-WePlanTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WePlanTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E4004E35BCF0EAC570491891 /* libPods-WePlanUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WePlanUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -155,6 +158,7 @@
 		4A3AA6F521200B3A000B0F5B /* Tool */ = {
 			isa = PBXGroup;
 			children = (
+				819974CF2125141A0096EE0A /* SpeechManager */,
 				4A3AA7272124671B000B0F5B /* CalendarManager */,
 				4A3AA7072120154D000B0F5B /* PrivacyPermission */,
 				4A3AA70321201533000B0F5B /* ViewController */,
@@ -339,6 +343,15 @@
 				4AE48CC4211B222B0092EF71 /* Info.plist */,
 			);
 			path = WePlanUITests;
+			sourceTree = "<group>";
+		};
+		819974CF2125141A0096EE0A /* SpeechManager */ = {
+			isa = PBXGroup;
+			children = (
+				819974D0212514790096EE0A /* SpeechManager.h */,
+				819974D1212514790096EE0A /* SpeechManager.m */,
+			);
+			path = SpeechManager;
 			sourceTree = "<group>";
 		};
 		8C09FB4BC613CCC8AE535A50 /* Frameworks */ = {
@@ -562,6 +575,7 @@
 			files = (
 				4A3AA723212304DA000B0F5B /* CenterViewControllerTableViewCell.m in Sources */,
 				4A3AA724212304DA000B0F5B /* LeftViewController.m in Sources */,
+				819974D2212514790096EE0A /* SpeechManager.m in Sources */,
 				4AE48CA3211B22280092EF71 /* ViewController.m in Sources */,
 				4A3AA726212304DA000B0F5B /* LeftViewControllerHeaderView.m in Sources */,
 				4A3AA722212304DA000B0F5B /* CenterViewController.m in Sources */,
