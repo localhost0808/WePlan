@@ -17,5 +17,5 @@
 + (void)getPrivacyPushNotification;//通知-
 + (void)getPrivacyAddressBook;//通讯录-
 + (void)getPrivacyDate;//日历、备忘录-
-
++ (void)getSpeech;
 @end

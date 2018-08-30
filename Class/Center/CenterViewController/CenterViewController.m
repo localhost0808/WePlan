@@ -26,8 +26,19 @@
     [self setupLeftMenuButton];
     if (@available(iOS 11.0, *)) {
         [self.navigationController.navigationBar setPrefersLargeTitles:YES];
+        UISearchController *searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+//        searchController.searchResultsUpdater = self;
+//        searchController.delegate = self;
+        searchController.dimsBackgroundDuringPresentation = NO;
+        searchController.hidesNavigationBarDuringPresentation = YES;
+        //重点：在合适的地方添加下面一行代码
+        self.definesPresentationContext = YES;
+        self.navigationItem.searchController = searchController;
+//        searchResultsController
     }
     [self.view addSubview:self.tableView];
+
+
 }
 
 -(void)setupLeftMenuButton {

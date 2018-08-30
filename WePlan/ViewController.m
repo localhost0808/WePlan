@@ -35,10 +35,7 @@ typedef enum  NetworkStatus {
     [super viewDidLoad];
     self.tabBar.barTintColor = MAIN_COLOR;
 //    self.tabBar.frame = CGRectMake(0, 200, 300, 200);
-    
-    
-    NSArray *sourceArr = [[MySQLAPI manager] mySQLAPISELECT:@"userInfo"];
-    NSLog(@"%@",sourceArr);
+
 
     [self getPrivacy];
     [self setViewControllers:@[[[MainNavigationController alloc] initWithRootViewController:[NSClassFromString(@"CenterViewController") class].new]]];
@@ -198,7 +195,8 @@ typedef enum  NetworkStatus {
 }
 
 - (void)userData {
-
+    NSArray *sourceArr = [[MySQLAPI manager] mySQLAPISELECT:@"userInfo"];
+    NSLog(@"%@",sourceArr);
 }
 
 - (void)UI_init {

@@ -9,8 +9,13 @@
 #ifndef PrefixHeader_pch
 #define PrefixHeader_pch
 
+#define yyyyMMddHHmm @"yyyy-MM-dd HH:mm"
+#define SavedEKEventsIdentifer @"WePlanSavedEKEventsIdentifer"
+
 
 #import "BaseViewController.h"
 #import "Define_Application.h"//基本颜色 基本Define
+
+#import "EventsManager.h"
 
 #endif /* PrefixHeader_pch */

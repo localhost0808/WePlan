@@ -7,6 +7,7 @@
 //
 
 #import "PrivacyPermission.h"
+
 //#import <CoreLocation/CLLocationManager.h>//定位
 @import CoreLocation;//定位
 @import CoreTelephony;//联网
@@ -16,9 +17,12 @@
 @import AddressBook;//通讯录
 @import Contacts;//检查通讯录权限
 @import EventKit;//日历和备忘录
+@import Speech;
+
 //#import <EventKit/EventKit.h>
 
-#define IOS9_0_AGO [[[UIDevice currentDevice] systemVersion] floatValue] < 9.0
+#define IOS9_0_LATER [[[UIDevice currentDevice] systemVersion] floatValue] > 9.0
+
 @interface PrivacyPermission()<CLLocationManagerDelegate> {
     CLLocationManager *manager;
 }
@@ -70,6 +74,7 @@
         case kCLAuthorizationStatusRestricted: NSLog(@"定位Delegate状态：Restricted"); break; default: break;
     }}
 
+#pragma mark 获取网络权限
 + (void)getPrivacyNet {
     
     /*** 获取网络权限 ***/
@@ -90,6 +95,7 @@
 
 }
 
+
 + (void)netCallOn {
     NSURL *url = [NSURL URLWithString:@"http://m.baidu.com"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -98,21 +104,12 @@
     }];
 }
 
+#pragma mark 获取相册权限
 + (void)getPrivacyPhotos {
     /*** 获取相册权限 ***/
     NSLog(@"相册状态：");
 
-#ifdef IOS9_0_AGO
-    ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
-
-    switch (status) {
-        case ALAuthorizationStatusAuthorized: NSLog(@"相册状态：Authorized"); break;
-        case ALAuthorizationStatusDenied: NSLog(@"相册状态：Denied"); break;
-        case ALAuthorizationStatusNotDetermined: NSLog(@"相册状态：not Determined"); break;
-        case ALAuthorizationStatusRestricted: NSLog(@"相册状态：Restricted"); break; default: break;
-    }
-
-#else
+#ifdef IOS9_0_LATER
     PHAuthorizationStatus photoAuthorStatus = [PHPhotoLibrary authorizationStatus];
     switch (photoAuthorStatus) {
         case PHAuthorizationStatusAuthorized: NSLog(@"相册状态：Authorized"); break;
@@ -120,15 +117,25 @@
         case PHAuthorizationStatusNotDetermined: NSLog(@"相册状态：not Determined"); break;
         case PHAuthorizationStatusRestricted: NSLog(@"相册状态：Restricted"); break; default: break;}
 
+#else
+    ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+    switch (status) {
+        case ALAuthorizationStatusAuthorized: NSLog(@"相册状态：Authorized"); break;
+        case ALAuthorizationStatusDenied: NSLog(@"相册状态：Denied"); break;
+        case ALAuthorizationStatusNotDetermined: NSLog(@"相册状态：not Determined"); break;
+        case ALAuthorizationStatusRestricted: NSLog(@"相册状态：Restricted"); break; default: break;
+    }
 #endif
     
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
-        if (status == PHAuthorizationStatusAuthorized)
-        { NSLog(@"Authorized"); }
-        else{ NSLog(@"Denied or Restricted");
-        } }];
+        if (status == PHAuthorizationStatusAuthorized) {
+            NSLog(@"已授权");
+        }else{
+            NSLog(@"没授权或未知");
+        }
+    }];
 }
-
+#pragma mark 获取相机麦克风权限
 + (void)getPrivacyAVFoundation {
     /*** 获取相机和麦克风权限 ***/
     NSLog(@"相机和麦克风状态：");
@@ -158,9 +165,9 @@
          }}];
 }
 
+#pragma mark 获取推送权限
 + (void)getPrivacyPushNotification {
     /*** 获取推送权限 ***/
-    NSLog(@"推送状态：");
 
     UIUserNotificationSettings *settings = [[UIApplication sharedApplication] currentUserNotificationSettings];
     switch (settings.types) {
@@ -168,8 +175,6 @@
         case UIUserNotificationTypeAlert: NSLog(@"推送状态：Alert Notification"); break;
         case UIUserNotificationTypeBadge: NSLog(@"推送状态：Badge Notification"); break;
         case UIUserNotificationTypeSound: NSLog(@"推送状态：sound Notification'"); break;
-            NSLog(@"推送状态：%@",settings.types);
-
         default: break;
     }
     
@@ -178,6 +183,7 @@
     
 }
 
+#pragma mark 获取通讯录权限
 + (void)getPrivacyAddressBook {
     /*** 获取通讯录权限 ***/
     NSLog(@"通讯录状态：");
@@ -220,6 +226,8 @@
 
 }
 
+
+#pragma mark 获取语音识别权限
 + (void)getPrivacyDate {
 //    typedef NS_ENUM(NSUInteger, EKEntityType) {
 //        EKEntityTypeEvent,//日历
@@ -246,5 +254,56 @@
             else{ NSLog(@"备忘录和日历状态：Denied or Restricted"); }
         }];
 }
+
+// 获取语音识别权限
+#pragma mark 获取语音识别权限
++ (void)getSpeech {
+    if (@available(iOS 10.0, *)) {
+        [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
+            bool isButtonEnabled =false;
+            switch(status) {
+                case SFSpeechRecognizerAuthorizationStatusAuthorized:
+
+                    isButtonEnabled =true;
+
+                    NSLog(@"可以语音识别");
+
+                    break;
+
+                case SFSpeechRecognizerAuthorizationStatusDenied:
+
+                    isButtonEnabled =false;
+
+                    NSLog(@"用户未授权使用语音识别");
+
+                    break;
+
+                case SFSpeechRecognizerAuthorizationStatusRestricted:
+
+                    isButtonEnabled =false;
+
+                    NSLog(@"语音识别在这台设备上受到限制");
+
+                    break;
+
+                case SFSpeechRecognizerAuthorizationStatusNotDetermined:
+
+                    isButtonEnabled =false;
+
+                    NSLog(@"语音识别未授权");
+
+                    break;
+
+                default:
+
+                    break;
+            }
+        }];
+    } else {
+        NSLog(@"使用语音识别请在iOS10.0以上");
+    }
+}
+
+
 
 @end
