@@ -27,33 +27,10 @@
     [self.view addSubview:self.swicthBut];
     [self.view addSubview:self.labText];
     [PrivacyPermission getSpeech];
-
-    EKEventStore *store = [[EKEventStore alloc] init];
-    NSArray *arr =  [store calendarsForEntityType:EKEntityTypeEvent];
-    for (EKCalendar *calendar in arr) {
-        NSLog(@"%@",calendar.title);
-        
-    }
-
-    if (![arr containsObject:@"WePlan Event"]) {
-        
-    }
-
-//    - (NSArray<EKEvent *> *)eventsMatchingPredicate:(NSPredicate *)predicate;
-
-//    - (NSPredicate *)predicateForEventsWithStartDate:(NSDate *)startDate endDate:(NSDate *)endDate calendars:(nullable NSArray<EKCalendar *> *)calendars;
-
-//    - (NSPredicate *)predicateForIncompleteRemindersWithDueDateStarting:(nullable NSDate *)startDate ending:(nullable NSDate *)endDate calendars:(nullable NSArray<EKCalendar *> *)calendars NS_AVAILABLE(10_8, 6_0);
-
-    EKEvent *event = [EKEvent eventWithEventStore:store];
-
 }
 
-- (NSArray*)calendarWithType:(EKEntityType)type
-{
-    EKEventStore* store = [[EKEventStore alloc] init];
-    return [store calendarsForEntityType:type];
-}
+
+
 #pragma mark----显示控件
 
 - (UILabel*)labText{
@@ -101,17 +78,18 @@
 - (void)startSpeech {
     NSLog(@"键盘按下");
     __weak typeof(self) WeakSelf = self;
-    [[SpeechManager manager] startRecordingWithSpeechInfo:^(SpeechManagerInfo *info) {
-        if (info.isSpeech || !info.error) {
-            WeakSelf.labText.text = info.text;
-        }
-    }];
+//    [[SpeechManager manager] startRecordingWithSpeechInfo:^(SpeechManagerInfo *info) {
+//        if (info.isSpeech || !info.error) {
+//            WeakSelf.labText.text = info.text;
+//        }
+//    }];
+
+    [[EventsManager manager] createEventWithEvent:nil];
 }
 - (void)endSpeech {
     NSLog(@"键盘弹起");
     [[SpeechManager manager] endRecording];
-
-
-    [[EventsManager manager] createEventWithEventModel:[[EKEventModel new] eventTitle:_labText.text Location:@"上海" StartDateStr:@"2018年8月30日" EndDateStr:@"2018年8月30日" AllDay:YES Notes:@"备注" AlarmStr:nil]];
+//
+//    [[EventsManager manager] createEventWithEventModel:[[EKEventModel new] eventTitle:@"时间名称" Location:@"上海" StartDateStr:@"2018年8月30日" EndDateStr:@"2018年8月30日" AllDay:YES Notes:[NSString stringWithFormat:@"%@%@",_labText.text,@"备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注备注"] AlarmStr:nil]];
 }
 @end

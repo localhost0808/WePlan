@@ -11,11 +11,9 @@
 #import "LeftViewControllerTableViewCell.h"
 #import <UIViewController+MMDrawerController.h>
 
-#define LEFTVIEWCONTROLLERTABLEVIEWCELLIFTIFER @"LEFTVIEWCONTROLLERTABLEVIEWCELLIFTIFER"
 #define LeftHeader_Height 170
 
 @interface LeftViewController ()<UITableViewDelegate,UITableViewDataSource>
-@property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,strong) LeftViewControllerHeaderView *leftViewControllerHeaderView;
 
 @property (nonatomic, strong) NSArray *imagesArr;
@@ -34,6 +32,8 @@
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.tableView registerClass:[LeftViewControllerTableViewCell class] forCellReuseIdentifier:TableViewCellIdentifier];
+
     [self setData];
     [self.view addSubview:self.leftViewControllerHeaderView];
     [self.view addSubview:self.tableView];
@@ -54,7 +54,7 @@
     return _imagesArr.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    LeftViewControllerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:LEFTVIEWCONTROLLERTABLEVIEWCELLIFTIFER forIndexPath:indexPath];
+    LeftViewControllerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:TableViewCellIdentifier forIndexPath:indexPath];
     cell.imageView.image = [UIImage imageNamed:_imagesArr[indexPath.row]];
     cell.textLabel.text = [NSString stringWithFormat:@"%@", _titlesArr[indexPath.row]];
     cell.textLabel.font = [UIFont fontWithName:@".SFUIText" size:15];
@@ -77,17 +77,6 @@
 }
 
 #pragma mark -- 懒加载
-
-- (UITableView *)tableView {
-    if(_tableView) return _tableView;
-    _tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    _tableView.tableFooterView = [UIView new];
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [_tableView registerClass:[LeftViewControllerTableViewCell class] forCellReuseIdentifier:LEFTVIEWCONTROLLERTABLEVIEWCELLIFTIFER];
-    return _tableView;
-}
 
 - (LeftViewControllerHeaderView *)leftViewControllerHeaderView {
     if(_leftViewControllerHeaderView) return _leftViewControllerHeaderView;

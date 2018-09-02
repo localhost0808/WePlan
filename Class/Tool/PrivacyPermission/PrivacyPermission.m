@@ -136,21 +136,38 @@
     }];
 }
 #pragma mark 获取相机麦克风权限
-+ (void)getPrivacyAVFoundation {
++ (void)getPrivacyAVFoundation{
+    [self getPrivacyAVFoundation:2];
+}
++ (void)getPrivacyAVFoundation:(NSInteger)type {
     /*** 获取相机和麦克风权限 ***/
     NSLog(@"相机和麦克风状态：");
-
-    AVAuthorizationStatus AVstatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];//相机权限
-//    AVAuthorizationStatus AVstatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];//麦克风权限
+    AVAuthorizationStatus AVstatus;
+    switch (type) {
+        case 0:{
+            AVstatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];//麦克风权限
+        }
+            break;
+        case 1:{
+            AVstatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];//麦克风权限
+        }
+            break;
+        default:{
+            [self getPrivacyAVFoundation:0];
+            [self getPrivacyAVFoundation:1];
+            return;
+        }
+            break;
+    }
     switch (AVstatus) {
             //允许状态
         case AVAuthorizationStatusAuthorized: NSLog(@"相机和麦克风状态：Authorized"); break;
             //不允许状态，可以弹出一个alertview提示用户在隐私设置中开启权限
         case AVAuthorizationStatusDenied: NSLog(@"相机和麦克风状态：Denied"); break;
             //未知，第一次申请权限
-        case AVAuthorizationStatusNotDetermined: NSLog(@"相机和麦克风状态：not Determined"); break;
+        case AVAuthorizationStatusNotDetermined: NSLog(@"麦克风状态：not Determined"); break;
             //此应用程序没有被授权访问,可能是家长控制权限
-        case AVAuthorizationStatusRestricted: NSLog(@"相机和麦克风状态：Restricted"); break; default: break;
+        case AVAuthorizationStatusRestricted: NSLog(@"麦克风状态：Restricted"); break; default: break;
     }
     
     [AVCaptureDevice requestAccessForMediaType:

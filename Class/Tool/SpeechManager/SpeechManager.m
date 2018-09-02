@@ -111,6 +111,8 @@
 
     AVAudioInputNode *inputNode = self.audioEngine.inputNode;
 
+    [inputNode removeTapOnBus:0];
+
     NSAssert(inputNode,@"录入设备没有准备好");
 
     NSAssert(self.recognitionRequest, @"请求初始化失败");

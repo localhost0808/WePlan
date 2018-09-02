@@ -11,33 +11,32 @@
 #import <UIViewController+MMDrawerController.h>
 #import <MMDrawerBarButtonItem.h>
 
-#define CENTERVIEWCONTROLLERTABLEVIEWCELLIFTIFER @"CENTERVIEWCONTROLLERTABLEVIEWCELLIFTIFER"
+#import "EidtViewController.h"
 
-@interface CenterViewController ()<UITableViewDelegate,UITableViewDataSource>
-@property (nonatomic,strong) UITableView *tableView;
+@interface CenterViewController ()<UITableViewDelegate,UITableViewDataSource>{
+    NSTimer *_timer;
+}
+
 @end
 
 @implementation CenterViewController
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self getCalendarData];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.mm_drawerController.openDrawerGestureModeMask = MMOpenDrawerGestureModeBezelPanningCenterView;
     self.navigationItem.title = @"主页";
     [self setupLeftMenuButton];
-    if (@available(iOS 11.0, *)) {
-        [self.navigationController.navigationBar setPrefersLargeTitles:YES];
-        UISearchController *searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
-//        searchController.searchResultsUpdater = self;
-//        searchController.delegate = self;
-        searchController.dimsBackgroundDuringPresentation = NO;
-        searchController.hidesNavigationBarDuringPresentation = YES;
-        //重点：在合适的地方添加下面一行代码
-        self.definesPresentationContext = YES;
-        self.navigationItem.searchController = searchController;
-//        searchResultsController
-    }
+    [self.tableView registerClass:[CenterViewControllerTableViewCell class] forCellReuseIdentifier:TableViewCellIdentifier];
     [self.view addSubview:self.tableView];
+//
+    _timer = [NSTimer scheduledTimerWithTimeInterval:3.f target:self selector:@selector(getCalendarData) userInfo:nil repeats:YES];
 
+    [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
 
 }
 
@@ -46,6 +45,9 @@
     MMDrawerBarButtonItem * leftDrawerButton = [[MMDrawerBarButtonItem alloc] initWithTarget:self action:@selector(leftDrawerButtonPress:)];
     //为navigationItem添加LeftBarButtonItem
     [self.navigationItem setLeftBarButtonItem:leftDrawerButton animated:YES];
+
+    [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"nav_add"] style:UIBarButtonItemStylePlain target:self action:@selector(gotoEidtViewController)] animated:YES];
+
 }
 //抽屉按钮动作
 -(void)leftDrawerButtonPress:(id)sender {
@@ -53,30 +55,50 @@
     [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
 }
 
+- (void)gotoEidtViewController {
+    [self.navigationController pushViewController:[[EidtViewController alloc] init] animated:YES];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self.navigationController pushViewController:[NSClassFromString(@"SpeechViewController") new] animated:YES];
+    EKEvent *event = _dataSourceArray[indexPath.row];
+    if (!event.eventIdentifier) {
+        NSLog(@"eventIdentifier 找不到");
+    }else {
+        [self.navigationController pushViewController:[[EidtViewController alloc] initWithEvent:event] animated:YES];
+    }
+}
+
+#pragma mark 获取数据
+- (void)getCalendarData {
+     NSArray *arr = [EventsManager getEventsCalendars:nil];
+    if (self.tableView && ![self.dataSourceArray isEqualToArray:arr]) {
+        self.dataSourceArray = arr;
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark -- TableView DataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 20;
+    return self.dataSourceArray.count;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CenterViewControllerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CENTERVIEWCONTROLLERTABLEVIEWCELLIFTIFER forIndexPath:indexPath];
-    cell.textLabel.text = [NSString stringWithFormat:@"%ld",indexPath.row];
+    CenterViewControllerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:TableViewCellIdentifier forIndexPath:indexPath];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.indexPath = indexPath;
+    EKEvent * event = self.dataSourceArray[indexPath.row];
+    [cell setEvent:event isFirst:YES];
     return cell;
 }
 
-#pragma mark -- 懒加载
-
-- (UITableView *)tableView {
-    if(_tableView) return _tableView;
-    _tableView = [[UITableView alloc] initWithFrame:self.view.frame style:UITableViewStylePlain];
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    _tableView.tableFooterView = [UIView new];
-    [_tableView registerClass:[CenterViewControllerTableViewCell class] forCellReuseIdentifier:CENTERVIEWCONTROLLERTABLEVIEWCELLIFTIFER];
-    return _tableView;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    CenterViewControllerTableViewCell *cell = [[CenterViewControllerTableViewCell alloc] init];
+    EKEvent * event = self.dataSourceArray[indexPath.row];
+    [cell setEvent:event isFirst:YES];
+    CGFloat rowHight = cell.rowHeight;
+    cell = nil;
+    return rowHight;
 }
+
+#pragma mark -- 懒加载
 
 @end

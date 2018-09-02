@@ -20,6 +20,11 @@
 		4A3AA72A2124673C000B0F5B /* CalendarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A3AA7292124673C000B0F5B /* CalendarManager.m */; };
 		4A50551C2137AECE004977AC /* SpeechManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A50551B2137AECE004977AC /* SpeechManager.m */; };
 		4A5055292137D34C004977AC /* EventsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5055282137D34C004977AC /* EventsManager.m */; };
+		4A5055332138E639004977AC /* NSString+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5055322138E639004977AC /* NSString+Category.m */; };
+		4A5055372139004E004977AC /* EidtViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A5055362139004E004977AC /* EidtViewController.m */; };
+		4A50553A21392259004977AC /* EidtViewControllerDefaultCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A50553921392259004977AC /* EidtViewControllerDefaultCell.m */; };
+		4A50554321397825004977AC /* TLTalkButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A50554121397825004977AC /* TLTalkButton.m */; };
+		4A505547213978E1004977AC /* UIImage+Color.m in Sources */ = {isa = PBXBuildFile; fileRef = 4A505546213978E1004977AC /* UIImage+Color.m */; };
 		4AE48CA0211B22280092EF71 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE48C9F211B22280092EF71 /* AppDelegate.m */; };
 		4AE48CA3211B22280092EF71 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AE48CA2211B22280092EF71 /* ViewController.m */; };
 		4AE48CA6211B22280092EF71 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4AE48CA4211B22280092EF71 /* Main.storyboard */; };
@@ -81,6 +86,16 @@
 		4A50551B2137AECE004977AC /* SpeechManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SpeechManager.m; sourceTree = "<group>"; };
 		4A5055272137D34C004977AC /* EventsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventsManager.h; sourceTree = "<group>"; };
 		4A5055282137D34C004977AC /* EventsManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventsManager.m; sourceTree = "<group>"; };
+		4A5055312138E639004977AC /* NSString+Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+Category.h"; sourceTree = "<group>"; };
+		4A5055322138E639004977AC /* NSString+Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+Category.m"; sourceTree = "<group>"; };
+		4A5055352139004E004977AC /* EidtViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EidtViewController.h; sourceTree = "<group>"; };
+		4A5055362139004E004977AC /* EidtViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EidtViewController.m; sourceTree = "<group>"; };
+		4A50553821392259004977AC /* EidtViewControllerDefaultCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EidtViewControllerDefaultCell.h; sourceTree = "<group>"; };
+		4A50553921392259004977AC /* EidtViewControllerDefaultCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EidtViewControllerDefaultCell.m; sourceTree = "<group>"; };
+		4A50554121397825004977AC /* TLTalkButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLTalkButton.m; sourceTree = "<group>"; };
+		4A50554221397825004977AC /* TLTalkButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLTalkButton.h; sourceTree = "<group>"; };
+		4A505545213978E1004977AC /* UIImage+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Color.h"; sourceTree = "<group>"; };
+		4A505546213978E1004977AC /* UIImage+Color.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Color.m"; sourceTree = "<group>"; };
 		4AE48C9B211B22280092EF71 /* WePlan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WePlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AE48C9E211B22280092EF71 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		4AE48C9F211B22280092EF71 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -161,6 +176,8 @@
 		4A3AA6F521200B3A000B0F5B /* Tool */ = {
 			isa = PBXGroup;
 			children = (
+				4A505544213978E1004977AC /* UIImage+ */,
+				4A5055302138E5F8004977AC /* NSString+ */,
 				4A5055262137D33C004977AC /* EventsManager */,
 				4A5055192137AEC0004977AC /* SpeechManager */,
 				4A3AA7272124671B000B0F5B /* CalendarManager */,
@@ -227,6 +244,7 @@
 		4A3AA712212304DA000B0F5B /* CenterViewController */ = {
 			isa = PBXGroup;
 			children = (
+				4A5055342139003B004977AC /* EidtViewController */,
 				4A3AA717212304DA000B0F5B /* CenterViewController.h */,
 				4A3AA713212304DA000B0F5B /* CenterViewController.m */,
 				819974CC212413100096EE0A /* SpeechViewController.h */,
@@ -307,6 +325,53 @@
 				4A5055282137D34C004977AC /* EventsManager.m */,
 			);
 			path = EventsManager;
+			sourceTree = "<group>";
+		};
+		4A5055302138E5F8004977AC /* NSString+ */ = {
+			isa = PBXGroup;
+			children = (
+				4A5055312138E639004977AC /* NSString+Category.h */,
+				4A5055322138E639004977AC /* NSString+Category.m */,
+			);
+			path = "NSString+";
+			sourceTree = "<group>";
+		};
+		4A5055342139003B004977AC /* EidtViewController */ = {
+			isa = PBXGroup;
+			children = (
+				4A687D12213A81DD0048E29D /* EidtViewControllerTableCell */,
+				4A50554021397825004977AC /* TLTalkButton */,
+				4A5055352139004E004977AC /* EidtViewController.h */,
+				4A5055362139004E004977AC /* EidtViewController.m */,
+			);
+			path = EidtViewController;
+			sourceTree = "<group>";
+		};
+		4A50554021397825004977AC /* TLTalkButton */ = {
+			isa = PBXGroup;
+			children = (
+				4A50554121397825004977AC /* TLTalkButton.m */,
+				4A50554221397825004977AC /* TLTalkButton.h */,
+			);
+			path = TLTalkButton;
+			sourceTree = "<group>";
+		};
+		4A505544213978E1004977AC /* UIImage+ */ = {
+			isa = PBXGroup;
+			children = (
+				4A505545213978E1004977AC /* UIImage+Color.h */,
+				4A505546213978E1004977AC /* UIImage+Color.m */,
+			);
+			path = "UIImage+";
+			sourceTree = "<group>";
+		};
+		4A687D12213A81DD0048E29D /* EidtViewControllerTableCell */ = {
+			isa = PBXGroup;
+			children = (
+				4A50553821392259004977AC /* EidtViewControllerDefaultCell.h */,
+				4A50553921392259004977AC /* EidtViewControllerDefaultCell.m */,
+			);
+			path = EidtViewControllerTableCell;
 			sourceTree = "<group>";
 		};
 		4AE48C92211B22280092EF71 = {
@@ -590,14 +655,19 @@
 				4A3AA724212304DA000B0F5B /* LeftViewController.m in Sources */,
 				4A50551C2137AECE004977AC /* SpeechManager.m in Sources */,
 				4AE48CA3211B22280092EF71 /* ViewController.m in Sources */,
+				4A5055372139004E004977AC /* EidtViewController.m in Sources */,
+				4A50554321397825004977AC /* TLTalkButton.m in Sources */,
 				4A3AA726212304DA000B0F5B /* LeftViewControllerHeaderView.m in Sources */,
 				4A3AA722212304DA000B0F5B /* CenterViewController.m in Sources */,
 				4A3AA725212304DA000B0F5B /* LeftViewControllerTableViewCell.m in Sources */,
+				4A505547213978E1004977AC /* UIImage+Color.m in Sources */,
 				4AE48CAE211B222B0092EF71 /* main.m in Sources */,
 				4A3AA70221201510000B0F5B /* MainNavigationController.m in Sources */,
 				4AE48CA0211B22280092EF71 /* AppDelegate.m in Sources */,
+				4A50553A21392259004977AC /* EidtViewControllerDefaultCell.m in Sources */,
 				4A3AA72A2124673C000B0F5B /* CalendarManager.m in Sources */,
 				4A5055292137D34C004977AC /* EventsManager.m in Sources */,
+				4A5055332138E639004977AC /* NSString+Category.m in Sources */,
 				4A3AA6FE21200DBC000B0F5B /* MySQLAPI.m in Sources */,
 				819974CE212413110096EE0A /* SpeechViewController.m in Sources */,
 				4A3AA70A2120154D000B0F5B /* PrivacyPermission.m in Sources */,

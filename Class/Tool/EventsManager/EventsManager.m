@@ -8,10 +8,10 @@
 
 #import "EventsManager.h"
 @interface EventsManager()
-@property (nonatomic, strong) EKEventStore *myEventStore;
 
 @end
 @implementation EventsManager
+
 #pragma mark -- 懒加载
 + (instancetype)manager {
     static EventsManager * instance = nil;
@@ -22,16 +22,20 @@
     return instance;
 }
 
+- (EKEventStore *)eventStore {
+    if (_eventStore) return _eventStore;
+    _eventStore = [EKEventStore new];
+    return _eventStore;
+}
 
+//TODO: 创建事件调用方法
 /**
  *  创建事件
  */
-- (void )createEventWithEventModel:(EKEventModel *)eventModel {
+- (void )createEventWithEvent:(EKEvent *)ekEvent {
 
-    EKEventStore * eventStore = [[EKEventStore alloc]init];
-
-    if ([eventStore respondsToSelector:@selector(requestAccessToEntityType:completion:)]) {
-        [eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError * _Nullable error) {
+    if ([self.eventStore respondsToSelector:@selector(requestAccessToEntityType:completion:)]) {
+        [self.eventStore requestAccessToEntityType:EKEntityTypeEvent completion:^(BOOL granted, NSError * _Nullable error) {
 
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (error) {
@@ -39,77 +43,93 @@
                 } else if (!granted) {
                     NSLog(@"被拒绝");
                 } else {
-
-
-
-                    //判断当前日历中是否已经创建了该事件
-                    EKEvent *event = [self getEventWithEKEventModel:eventModel];
-
-                    if (event == nil) {
-
-                        event = [EKEvent eventWithEventStore:self.myEventStore];
-                        event.title = eventModel.title;
-                        event.location = eventModel.location;
-
-                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-                        [dateFormatter setDateFormat:yyyyMMddHHmm];
-
-                        NSDate *startDate = [dateFormatter dateFromString:eventModel.startDateStr];
-                        NSDate *endDate = [dateFormatter dateFromString:eventModel.endDateStr];
-                        event.startDate = startDate?startDate:[[NSDate alloc] init];
-                        event.endDate = endDate?endDate:[[NSDate alloc] init];
-                        event.allDay = startDate&&endDate?eventModel.allDay:YES;
-                        event.notes = eventModel.notes;
-                        if (eventModel.alarmStr.length) {
-                            NSInteger alarmTime = [self getAlarmWithStr:eventModel.alarmStr];
-                            if (alarmTime != 0) {
-                                [event addAlarm:[EKAlarm alarmWithRelativeOffset:alarmTime]];
-                            }
-                        }
-
-                        [event setCalendar:[self.myEventStore defaultCalendarForNewEvents]];
-                        NSError *err;
-                        BOOL isSave;
-                        isSave = [self.myEventStore saveEvent:event span:EKSpanThisEvent error:&err];
-                        if (isSave) {
-                            NSLog(@"保存成功");
-                            NSString *identifer = event.eventIdentifier;
-
-                            NSMutableArray *tmpArr = [NSMutableArray arrayWithObject:identifer];
-
-
-                            NSMutableArray *arr = [[NSUserDefaults standardUserDefaults] objectForKey:SavedEKEventsIdentifer];
-                            if (!arr) {
-                                [[NSUserDefaults standardUserDefaults] setObject:tmpArr forKey:SavedEKEventsIdentifer];
-                            } else {
-                                [tmpArr addObjectsFromArray:arr];
-                                [[NSUserDefaults standardUserDefaults] setObject:tmpArr forKey:SavedEKEventsIdentifer];
-                            }
-                        }
-                    }
+                    [self addEventWithEvent:ekEvent];
                 }
-
             }) ;
         }];
     }
 }
 
+- (void)addEventWithEvent:(EKEvent *)ekEvent {
+    //判断当前日历中是否已经创建了该事件
+    EKEvent *event = [self getEventWithEKEvent:ekEvent];
+    if (event == nil) {
 
+        EKEvent *event = [EKEvent eventWithEventStore:self.eventStore];
+        event.title = @"代码创建的日程";
+        event.calendar = [self.eventStore defaultCalendarForNewEvents];
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        NSDateComponents *components = [[NSDateComponents alloc] init];
+        components.hour = 1;
+        NSDate *endTime = [calendar dateByAddingComponents:components toDate:[NSDate date] options:0];
+        event.startDate = [NSDate date];
+        event.endDate = endTime;
+        event.notes = @"档期详情：hyaction://hunyu-music";
+        [event addAlarm:[EKAlarm alarmWithRelativeOffset:-10*60]];
+
+        NSError *error;
+        [self.eventStore saveEvent:event span:EKSpanFutureEvents commit:YES  error:&error];
+        if (!error) {
+            NSLog(@"添加成功！");
+        }else{
+            NSLog(@"添加失败：%@",error);
+        }
+        
+    }
+}
+
+
+- (EKCalendar *)createClandar {
+
+    EKCalendar *calendar;
+    for (EKCalendar *ekcalendar in [self.eventStore calendarsForEntityType:EKEntityTypeEvent]) {
+        if ([ekcalendar.title isEqualToString:@"WePlan"]) {
+            calendar = ekcalendar;
+        }
+    }
+    if (!calendar) {
+        EKSource *localSource = nil;
+        for (EKSource *source in self.eventStore.sources) {
+            if (source.sourceType == EKSourceTypeCalDAV && [source.title isEqualToString:@"iCloud"]) {
+                localSource = source;
+                break;
+            }
+        }
+
+        if (localSource == nil) {
+            for (EKSource *source in self.eventStore.sources) {
+                if (source.sourceType == EKSourceTypeLocal) {
+                    localSource = source;
+                    break;
+                }
+            }
+        }
+
+        if (localSource == nil) {
+            NSLog(@"创建Clendar失败。。。。。。。。请检查日历iCould是否打开");
+            return nil;
+        }
+        calendar = [EKCalendar calendarForEntityType:EKEntityTypeEvent eventStore:self.eventStore];
+        calendar.source = localSource;
+        calendar.title = @"WePlan";//自定义日历标题
+        calendar.CGColor = [UIColor greenColor].CGColor;//自定义日历颜色
+        NSError* error;
+        [self.eventStore saveCalendar:calendar commit:YES error:&error];
+    }
+
+    return calendar;
+}
 
 /**
  *  删除事件
  */
-- (BOOL)deleteEvent:(EKEventModel *)eventModel {
-
-
+- (BOOL)deleteEvent:(EKEvent *)ekEvent {
     __block BOOL isDeleted = NO;
     __block NSString *eventIdentif;
     dispatch_async(dispatch_get_main_queue(), ^{
-
-        EKEvent * event = [self getEventWithEKEventModel:eventModel];
-        eventIdentif = event.eventIdentifier;
+        eventIdentif = ekEvent.eventIdentifier;
         NSError *err = nil;
-        isDeleted = [self.myEventStore removeEvent:event span:EKSpanThisEvent commit:YES error:&err];
+        isDeleted = [self.eventStore removeEvent:ekEvent span:EKSpanThisEvent commit:YES error:&err];
     });
 
     if (isDeleted) {
@@ -134,17 +154,13 @@
  *  使用 identifier删除
  */
 -(void)deleteWithIdentifier:(NSString *)identifier {
-    if (!self.myEventStore) {
-        self.myEventStore = [[EKEventStore alloc]init];
-    }
-
-    EKEvent *event = [self.myEventStore eventWithIdentifier:identifier];
+    EKEvent *event = [self.eventStore eventWithIdentifier:identifier];
     NSLog(@"eventtitle == %@", event.title);
 
     __block BOOL isDeleted = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
         NSError *err = nil;
-        isDeleted = [self.myEventStore removeEvent:event span:EKSpanThisEvent commit:YES error:&err];
+        isDeleted = [self.eventStore removeEvent:event span:EKSpanThisEvent commit:YES error:&err];
     });
     if (isDeleted) {
         [self clearIdentifier:event.eventIdentifier];
@@ -170,28 +186,11 @@
 /**
  *  查找日历事件中相同的事件
  */
-- (EKEvent *)getEventWithEKEventModel:(EKEventModel *)eventModel {
-
-    EKEventStore * eventStore = [[EKEventStore alloc]init];
-    self.myEventStore =  eventStore;
-
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    [dateFormatter setDateFormat:yyyyMMddHHmm];
-
-    NSDate *startDate = [dateFormatter dateFromString:eventModel.startDateStr];
-    NSDate *endDate = [dateFormatter dateFromString:eventModel.endDateStr];
-
-//    NSPredicate *predicate = [eventStore predicateForEventsWithStartDate:startDate endDate:endDate calendars:@[[eventStore defaultCalendarForNewEvents]]];
-    NSPredicate *predicate = [eventStore predicateForRemindersInCalendars:@[[eventStore defaultCalendarForNewEvents]]];
-
-    NSArray *events = [eventStore eventsMatchingPredicate:predicate];
-
+- (EKEvent *)getEventWithEKEvent:(EKEvent *)ekEvent {
     EKEvent *resultEvent = nil;
-    if (events) {
-        for (EKEvent *event in events) {
-            if ([self checkEvent:event sameWithEvent:eventModel]) {
-                resultEvent = event;
-            }
+    for (EKEvent *event in [EventsManager getEventsCalendars:nil]) {
+        if ([self checkEvent:event sameWithEvent:ekEvent]) {
+            resultEvent = event;
         }
     }
     return resultEvent;
@@ -200,15 +199,14 @@
 /**
  *  判断两个事件是否相同
  */
-- (BOOL)checkEvent:(EKEvent *)event sameWithEvent:(EKEventModel *)eventModel {
+- (BOOL)checkEvent:(EKEvent *)event sameWithEvent:(EKEvent *)ekEvent {
 
-    NSInteger modelAlarm = [self getAlarmWithStr:eventModel.alarmStr];
-
+    NSInteger alarm = ekEvent.alarms[0].relativeOffset;
     EKAlarm *eventAlarm = event.alarms[0];
     NSInteger alarmInt = eventAlarm.relativeOffset;
 
     //项目中日程 只有 标题和 时间 和提醒时间 所有只做两个判断
-    if ([event.title isEqualToString: eventModel.title] && (modelAlarm == alarmInt)) {
+    if ([event.title isEqualToString: ekEvent.title] && (alarm == alarmInt)) {
         return YES;
     } else {
         return NO;
@@ -239,18 +237,35 @@
     return alarmTime;
 }
 
-@end
-
-@implementation EKEventModel
-- (instancetype)eventTitle:(NSString *)title Location:(NSString *)location StartDateStr:(NSString *)startDateStr EndDateStr:(NSString *)endDateStr AllDay:(BOOL)allDay Notes:(NSString *)notes AlarmStr:(NSString *)alarmStr {
-    self.title = title;
-    self.location = location;
-    self.startDateStr = startDateStr;
-    self.endDateStr = endDateStr;
-    self.allDay = allDay;
-    self.notes = notes;
-    self.alarmStr = alarmStr;
-    return self;
+//TODO: 查新identifier对应的事件
++ (nullable EKEvent *)eventWithIdentifier:(NSString *)identifier {
+    return [[EventsManager manager].eventStore eventWithIdentifier:identifier];
 }
+//TODO:    查询 两年前 和两年后所有的事件
++ (NSArray <EKEvent *> *)getEventsCalendars:(NSArray <EKCalendar *> *)calendars {
+    EKEventStore * eventStore = [EventsManager manager].eventStore;
+    NSDate *startDate = [EventsManager getCalendarDateYear:-2 Day:0 Hour:0 Minute:0];
+    NSDate *endDate = [EventsManager getCalendarDateYear:2 Day:0 Hour:0 Minute:0];
+    NSArray *eventsCalendars = @[[[EventsManager manager] createClandar]];
+    NSPredicate * predicate = [eventStore predicateForEventsWithStartDate:startDate endDate:endDate calendars:eventsCalendars];
+    NSArray *clendarArray = [eventStore eventsMatchingPredicate:predicate];
+    return clendarArray;
+}
+
+#pragma mark 获取时间
++ (NSDate *)getCalendarDateYear:(NSInteger)year Day:(NSInteger)day Hour:(NSInteger)hour Minute:(NSInteger)minute {
+    NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+    [dateComponents setYear:year];
+    [dateComponents setDay:day];
+    [dateComponents setHour:hour];
+    [dateComponents setMinute:minute];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *date = [calendar dateByAddingComponents:dateComponents toDate:[NSDate date] options:0];
+    //得到本地时间，避免时区问题
+    NSTimeZone *zone = [NSTimeZone systemTimeZone];
+    NSInteger interval = [zone secondsFromGMTForDate:date];
+    return [date dateByAddingTimeInterval:interval];
+}
+
 @end
 
